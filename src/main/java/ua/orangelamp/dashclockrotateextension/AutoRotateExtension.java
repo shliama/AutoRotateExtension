@@ -6,14 +6,10 @@ import android.provider.Settings;
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 
-import ua.orangelamp.dashclockrotateextension.utils.Logger;
-
 public class AutoRotateExtension extends DashClockExtension {
 
     @Override
     protected void onUpdateData(int reason) {
-        Logger.d("reason - " + reason);
-
         ContentResolver resolver = getContentResolver();
         boolean autoOrientationEnabled = getAutoOrientationEnabled(resolver);
 
@@ -24,7 +20,7 @@ public class AutoRotateExtension extends DashClockExtension {
 
         publishUpdate(new ExtensionData()
                 .visible(true)
-                .icon(autoOrientationEnabled ? R.drawable.ic_auto_rotate_on : R.drawable.ic_launcher)
+                .icon(autoOrientationEnabled ? R.drawable.ic_auto_rotate_on : R.drawable.ic_auto_rotate_off)
                 .status(autoOrientationEnabled ? "ON" : "OFF")
                 .expandedTitle("Auto-rotate screen - " + (autoOrientationEnabled ? "On" : "Off")));
     }
