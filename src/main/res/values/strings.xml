@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DashClock Rotate Extension</string>
+    <string name="extension_name">DashRotate</string>
+    <string name="extension_description">Toggles auto-rotate screen setting.</string>
+</resources>
