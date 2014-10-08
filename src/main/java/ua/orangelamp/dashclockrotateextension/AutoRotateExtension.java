@@ -6,52 +6,27 @@ import android.provider.Settings;
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 
+import ua.orangelamp.dashclockrotateextension.utils.Logger;
+
 public class AutoRotateExtension extends DashClockExtension {
-
-    public static final String ACTION_EVENT = "ua.orangelamp.dashclockrotateextension.ACTION_EVENT";
-
-
-    @Override
-    protected void onInitialize(boolean isReconnect) {
-        super.onInitialize(isReconnect);
-        if (!isReconnect) {
-////Listener for change battery: I prefer listen only for power change.
-////You can change it with ACTION_BATTERY_CHANGED
-//            IntentFilter filter=new IntentFilter();
-//            filter.addAction(Intent.ACTION_POWER_CONNECTED);
-//            filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
-//            getApplicationContext().registerReceiver(mBatteryReceiver,
-//                    filter);
-////User can choose for ACTION_BATTERY_CHANGED
-//            registerChangeReceiver();
-        }
-    }
 
     @Override
     protected void onUpdateData(int reason) {
+        Logger.d("reason - " + reason);
 
-////Register and Unregister changeReceiver
-//        registerChangeReceiver();
-
-        getData();
-
-        publishUpdateExtensionData();
-    }
-
-    private void getData() {
-
-    }
-
-    private void publishUpdateExtensionData() {
         ContentResolver resolver = getContentResolver();
+        boolean autoOrientationEnabled = getAutoOrientationEnabled(resolver);
 
-        // Publish the extension data update.
+        if (reason == UPDATE_REASON_MANUAL) {
+            setAutoOrientationEnabled(resolver, !autoOrientationEnabled);
+            autoOrientationEnabled = getAutoOrientationEnabled(resolver);
+        }
+
         publishUpdate(new ExtensionData()
                 .visible(true)
-                .icon(getAutoOrientationEnabled(resolver) ? R.drawable.ic_auto_rotate_on : R.drawable.ic_launcher)
-                .status(getAutoOrientationEnabled(resolver) ? "ON" : "OFF")
-                .expandedTitle("Auto-rotate screen - " + (getAutoOrientationEnabled(resolver) ? "On" : "Off")));
-
+                .icon(autoOrientationEnabled ? R.drawable.ic_auto_rotate_on : R.drawable.ic_launcher)
+                .status(autoOrientationEnabled ? "ON" : "OFF")
+                .expandedTitle("Auto-rotate screen - " + (autoOrientationEnabled ? "On" : "Off")));
     }
 
     public boolean getAutoOrientationEnabled(ContentResolver resolver) {
